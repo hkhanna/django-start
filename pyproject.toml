@@ -1,0 +1,36 @@
+[project]
+name = "django-start"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = ["django>=6.0.7", "django-environ>=0.14.0"]
+
+[dependency-groups]
+dev = [
+  "django-stubs>=6.0.7",
+  "isort>=8.0.1",
+  "mypy>=2.3.0",
+  "pytest>=9.1.1",
+  "pytest-django>=4.12.0",
+  "ruff>=0.15.21",
+]
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "config.settings.test"
+
+[[tool.mypy.overrides]]
+module = "environ.*"
+ignore_missing_imports = true
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+FAIL_INVALID_TEMPLATE_VARS = true
+python_files = ["test*.py"]
+addopts = "--reuse-db --create-db"
