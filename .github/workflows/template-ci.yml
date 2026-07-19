@@ -32,5 +32,5 @@ jobs:
         run: uv run python manage.py migrate
         working-directory: ${{ runner.temp }}/rendered
       - name: Test rendered project
-        run: uv run pytest || { [ $? -eq 5 ] && echo "No tests collected yet"; }
+        run: uv run pytest
         working-directory: ${{ runner.temp }}/rendered

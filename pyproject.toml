@@ -15,6 +15,10 @@ dev = [
   "ruff>=0.15.21",
 ]
 
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
 

@@ -28,6 +28,4 @@ jobs:
       - run: uv run mypy .
       - run: uv run python manage.py makemigrations --check --dry-run
       - name: Run tests
-        # pytest exits 5 when no tests are collected; tolerate that
-        # until the repo has a test suite
-        run: uv run pytest || { [ $? -eq 5 ] && echo "No tests collected yet"; }
+        run: uv run pytest 
