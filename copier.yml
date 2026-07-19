@@ -1,3 +1,17 @@
 project_name:
   type: str
   help: What is your project name?
+
+_exclude:
+  # Copier's built-in defaults (setting _exclude replaces them, so they
+  # must be restated)
+  - copier.yml
+  - copier.yaml
+  - "~*"
+  - "*.py[co]"
+  - __pycache__
+  - .git
+  - .DS_Store
+  - .svn
+  # Template-repo-only files that should not end up in generated projects
+  - .github/workflows/template-ci.yml

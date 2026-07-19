@@ -1,0 +1,36 @@
+# CI for the template repo itself: verify the Copier template renders
+# into a working project. Excluded from generated projects via _exclude
+# in copier.yml.
+name: Template CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v8
+        with:
+          enable-cache: true
+      - name: Render template
+        run: uvx copier copy --vcs-ref=HEAD --defaults -d project_name=rendered . "$RUNNER_TEMP/rendered"
+      - name: Install rendered project
+        run: uv sync --locked
+        working-directory: ${{ runner.temp }}/rendered
+      - name: Migrate rendered project
+        run: uv run python manage.py migrate
+        working-directory: ${{ runner.temp }}/rendered
+      - name: Test rendered project
+        run: uv run pytest || { [ $? -eq 5 ] && echo "No tests collected yet"; }
+        working-directory: ${{ runner.temp }}/rendered
