@@ -13,11 +13,10 @@ class EmailFieldCaseInsensitive(models.EmailField):
         value = super().to_python(value)
         if value:
             return value.lower()
-        else:
-            return value
+        return value
 
 
-class UserManager(BaseUserManager):
+class UserManager(BaseUserManager["User"]):
     """Customized user manager"""
 
     use_in_migrations = True
@@ -101,11 +100,10 @@ class User(AbstractUser):
     def name(self):
         if self.display_name:
             return self.display_name
-        elif self.first_name and self.last_name:
+        if self.first_name and self.last_name:
             return f"{self.first_name} {self.last_name}"
-        elif self.first_name:
+        if self.first_name:
             return self.first_name
-        elif self.last_name:
+        if self.last_name:
             return self.last_name
-        else:
-            return self.email
+        return self.email

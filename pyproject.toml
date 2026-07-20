@@ -21,6 +21,14 @@ venv = ".venv"
 
 [tool.mypy]
 plugins = ["mypy_django_plugin.main"]
+# Type-check function bodies even when the function has no type annotations
+check_untyped_defs = true
+# Flag `# type: ignore` comments that no longer suppress a real error
+warn_unused_ignores = true
+# Flag cast() calls that don't actually change the type
+warn_redundant_casts = true
+# Flag [[tool.mypy.overrides]] sections that don't match any module
+warn_unused_configs = true
 
 [tool.django-stubs]
 django_settings_module = "config.settings.test"
@@ -29,11 +37,41 @@ django_settings_module = "config.settings.test"
 module = "environ.*"
 ignore_missing_imports = true
 
+# Migrations are auto-generated; not worth type-checking
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true
+
+[tool.ruff]
+# Skip linting auto-generated migrations and collected static files
+extend-exclude = ["*/migrations/*.py", "staticfiles/*"]
+
 [tool.ruff.lint]
-extend-select = ["I"]
+extend-select = [
+  "B",   # flake8-bugbear: likely bugs (mutable default args, loop variable capture, etc.)
+  "C4",  # flake8-comprehensions: simplifiable list/dict/set comprehensions
+  "DJ",  # flake8-django: Django pitfalls (nullable CharField, missing __str__, field order)
+  "DTZ", # flake8-datetimez: naive (non-timezone-aware) datetime usage
+  "I",   # isort: import sorting
+  "PT",  # flake8-pytest-style: pytest idioms (fixture/parametrize style, broad raises)
+  "RET", # flake8-return: unnecessary else-after-return, redundant return values
+  "S",   # bandit: security issues (hardcoded secrets, shell injection, weak crypto)
+  "SIM", # flake8-simplify: code that can be written more simply
+  "T20", # flake8-print: leftover print() / pprint() calls
+  "UP",  # pyupgrade: outdated syntax made modern (old typing, f-strings, super())
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use bare `assert` by design under pytest
+"**/test*.py" = ["S101"]
+# Dev/test settings intentionally hardcode a throwaway SECRET_KEY
+"config/settings/local.py" = ["S105"]
+"config/settings/test.py" = ["S105"]
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.test"
 FAIL_INVALID_TEMPLATE_VARS = true
 python_files = ["test*.py"]
-addopts = "--reuse-db --create-db"
+# --import-mode=importlib: pytest-recommended import mode; avoids sys.path manipulation
+# and lets test files with the same name coexist across apps without __init__.py files
+addopts = "--import-mode=importlib"
