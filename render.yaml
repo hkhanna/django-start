@@ -4,11 +4,11 @@ services:
     name: django-start
     repo: https://github.com/hkhanna/django-start
     region: virginia
-    plan: free
+    plan: starter
     branch: main
-    buildCommand: set -o errexit; uv sync --frozen --no-dev; uv run python manage.py collectstatic --no-input
+    buildCommand: uv sync --frozen --no-dev && uv run python manage.py collectstatic --no-input
     # Migrations must run at start: the disk is not mounted during build or pre-deploy.
-    startCommand: set -o errexit; uv run python manage.py migrate; uv run gunicorn config.wsgi:application
+    startCommand: uv run python manage.py migrate && uv run gunicorn config.wsgi:application
     disk:
       name: data
       mountPath: /var/data

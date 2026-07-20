@@ -1,18 +1,32 @@
+from pathlib import Path
+
 from .common import *  # noqa: F403
 from .common import BASE_DIR, MIDDLEWARE, env
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS: list = [env("RENDER_EXTERNAL_HOSTNAME")]
 
-STORAGES = {
-    # TBD - default storage in production
+# This is the path to the Render persistent disk.
+DISK_DIR = Path("/var/data")
+
+DATABASES = {
     "default": {
-        "BACKEND": "django.core.files.storage.InMemoryStorage",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": DISK_DIR / "db.sqlite3",
+    }
+}
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
+
+MEDIA_ROOT = DISK_DIR / "media"
 
 # STATIC FILES - WHITENOISE
 # The WhiteNoise middleware should go above everything else except the security middleware.
