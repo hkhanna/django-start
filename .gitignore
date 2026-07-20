@@ -15,4 +15,5 @@ db.sqlite3
 .env
 .media/
 .backups/
+staticfiles/
 

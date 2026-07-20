@@ -2,7 +2,7 @@ from .common import *  # noqa: F403
 from .common import BASE_DIR, MIDDLEWARE, env
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
-ALLOWED_HOSTS: list[str] = []
+ALLOWED_HOSTS: list = [env("RENDER_EXTERNAL_HOSTNAME")]
 
 STORAGES = {
     # TBD - default storage in production

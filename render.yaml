@@ -1,0 +1,15 @@
+services:
+  - type: web
+    runtime: python
+    name: django-start
+    repo: https://github.com/hkhanna/django-start
+    region: virginia
+    plan: free
+    branch: main
+    buildCommand: set -o errexit; uv sync --frozen --no-dev; uv run python manage.py collectstatic --no-input; uv run python manage.py migrate
+    startCommand: uv run gunicorn config.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
