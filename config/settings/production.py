@@ -32,3 +32,7 @@ SECURE_HSTS_PRELOAD = False
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = "DENY"
+
+# Without this exemption, a 301 from SecurityMiddleware might
+# pass the check without everrunning the view's database query.
+SECURE_REDIRECT_EXEMPT = [r"^healthz$"]
