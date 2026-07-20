@@ -6,8 +6,13 @@ services:
     region: virginia
     plan: free
     branch: main
-    buildCommand: set -o errexit; uv sync --frozen --no-dev; uv run python manage.py collectstatic --no-input; uv run python manage.py migrate
-    startCommand: uv run gunicorn config.wsgi:application
+    buildCommand: set -o errexit; uv sync --frozen --no-dev; uv run python manage.py collectstatic --no-input
+    # Migrations must run at start: the disk is not mounted during build or pre-deploy.
+    startCommand: set -o errexit; uv run python manage.py migrate; uv run gunicorn config.wsgi:application
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1 # Must be 1 or a multiple of 5
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: config.settings.production
