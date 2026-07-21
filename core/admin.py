@@ -11,7 +11,7 @@ class UserAdmin(DefaultUserAdmin):
         (None, {"fields": ("id", "uuid", "email", "password")}),
         (
             "Personal info",
-            {"fields": ("first_name", "last_name", "display_name", "email_history")},
+            {"fields": ("first_name", "last_name", "display_name")},
         ),
         (
             "Permissions",
@@ -32,7 +32,7 @@ class UserAdmin(DefaultUserAdmin):
     )
     list_display = ("email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
-    search_fields = ("email", "first_name", "last_name", "email_history")
+    search_fields = ("email", "first_name", "last_name")
     ordering = ("email",)
     filter_horizontal = ("groups", "user_permissions")
     readonly_fields = ("id", "uuid")

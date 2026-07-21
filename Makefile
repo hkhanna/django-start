@@ -6,7 +6,7 @@ DB_NAME = $(shell basename $(CURDIR))-db
 
 # RUNNING AND TESTING #
 app:
-	uv run python manage.py runserver_plus 127.0.0.1
+	uv run python manage.py runserver 
 
 check: mypy ruff
 	uv run py.test 
