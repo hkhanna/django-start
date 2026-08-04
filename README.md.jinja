@@ -1,0 +1,29 @@
+# {{ project_name }}
+
+## Local Development
+
+### Local Installation
+
+- Clone the repo: `git clone git@github.com:hkhanna/{{project_name}}.git`
+- Copy `.env.example` to `.env` and make any appropriate changes.
+- Run `make all`
+- The initial superuser account is `admin@localhost` with password `admin`.
+
+### Running Locally
+
+- `make run` will load the application at `localhost`.
+- `make format` will run the ruff formatter.
+
+### Testing
+
+- `make mypy` to run a manual typecheck on the repo.
+- `make ruff` will run the ruff linter and formatter checks.
+- `make check` will run the mypy and ruff checkers and then all tests.
+
+### Updating Packages
+
+- `uv sync --upgrade`
+
+## Deployment
+
+- Push to `origin/main` and it will automatically trigger a deploy.
