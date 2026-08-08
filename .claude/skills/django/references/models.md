@@ -20,6 +20,11 @@ created_at = models.DateTimeField(db_index=True, default=timezone.now)
 updated_at = models.DateTimeField(auto_now=True)
 ```
 
+## The user model
+
+- A new project defines its own user model before the first migration — `class User(AbstractUser)` in its own app, `AUTH_USER_MODEL` pointing at it — even with no extra fields yet. Swapping user models after tables exist is schema surgery.
+- Reference it as `settings.AUTH_USER_MODEL` in model field definitions and `get_user_model()` everywhere else.
+
 ## Model hygiene
 
 - Set `related_name` explicitly on every `ForeignKey` and `ManyToManyField`.

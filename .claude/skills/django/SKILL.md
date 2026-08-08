@@ -1,6 +1,6 @@
 ---
 name: django
-description: Django house standard for this codebase. Use when creating a Django project or app; writing or changing models, managers, views, forms, templates, URLs, or settings; writing migrations; or adding a dependency. Encodes fat models / thin views and 12-factor config
+description: Django house standard for this codebase. Use when creating a Django project or app; writing or changing models, managers, views, forms, URLs, or settings; writing migrations; or adding a dependency. Encodes fat models / thin views and 12-factor config
 ---
 
 # Django house standard
@@ -15,6 +15,7 @@ Two leading words carry most of this standard. Think with them by name whenever 
 
 - Dependencies go through **uv**: `uv add <pkg>` for runtime, `uv add --group dev <pkg>` for tooling. Both update `pyproject.toml` and pin `uv.lock`. Commit `uv.lock` and treat it as authoritative; install with `uv sync`.
 - Read the Python and Django versions from `pyproject.toml` before writing anything version-sensitive, and use APIs those versions provide.
+- Work test-first: every change to production code starts from a failing test. The red-green-refactor loop and the testing standard live in the django-testing skill.
 
 ## Layout
 
@@ -31,8 +32,7 @@ Pull in the matching file before you write. Each one holds the rules that change
 - Any code that reads through the ORM → `references/queries.md`
 - Views or URLs → `references/views-urls.md`
 - Forms → `references/forms.md`
-- Templates → `references/templates.md`
-- Views or templates using HTMX (`hx-` attributes, partial responses) → `references/htmx.md`
+- Templates, HTMX, Tailwind, or Alpine — anything the browser renders → the django-frontend skill
 - Settings, environment, or secrets → `references/config.md`
 - Adding a dependency → `references/packages.md`
 - Finishing a change that touches auth, permissions, user input, or settings → `references/security-checklist.md`

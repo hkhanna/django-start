@@ -21,7 +21,7 @@ Work test-first. Write a failing test that describes the behavior you want (red)
 
 ## Test data
 
-- Create model instances through builder functions in a `factories.py` alongside the tests. Name each `make_<model>`, fill defaults with a module-level `Faker()` instance, accept `**overrides`, and apply them as `defaults | overrides` so a test pins only the fields it cares about. Default a foreign key by calling the related model's builder. These plain functions are the house pattern; factory_boy and model_bakery stay out. The `faker` package is not yet a dev dependency — `uv add --group dev faker` the first time a factory needs it; its pytest plugin also provides the `faker` and `faker_seed` fixtures.
+- Create model instances through builder functions in a `factories.py` alongside the tests. Name each `make_<model>`, fill defaults with a module-level `Faker()` instance, accept `**overrides`, and apply them as `defaults | overrides` so a test pins only the fields it cares about. Default a foreign key by calling the related model's builder. These plain functions are the house pattern; factory_boy and model_bakery stay out. If `faker` isn't yet in the dev group, `uv add --group dev faker`; its pytest plugin also provides the `faker` and `faker_seed` fixtures.
 - Inside a test body, generate one-off fake values with the `faker` fixture, and set the `faker_seed` fixture when a test needs reproducible values.
 - Keep `conftest.py` fixtures for clients and shared mocks — an authenticated client, a stubbed external service. Data construction stays in the builders, where a per-test override is a keyword argument rather than a fixture indirection.
 

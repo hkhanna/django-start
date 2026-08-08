@@ -32,7 +32,7 @@ def product_detail(request: HttpRequest, slug: str) -> HttpResponse:
 
 Compose with plain functions, escalating as the overlap grows:
 
-- Shared context data → a function that returns a dict, merged into each view's context: `context = {...} | checkout_pages_context(request.user)`. (Data needed site-wide or by a template-level component is handled at the template layer — see `templates.md`.)
+- Shared context data → a function that returns a dict, merged into each view's context: `context = {...} | checkout_pages_context(request.user)`. (Data needed site-wide or by a template-level component is handled at the template layer — see the django-frontend skill's `templates.md`.)
 - Shared flow → the entry-point views delegate to one parameterized function taking the pieces that vary: queryset, template name, extra context.
 - Shared flow with a varying step in the middle → pass a function as that parameter; a closure defined inside the entry-point view adapts a mismatched signature and carries the view's locals with it.
 
