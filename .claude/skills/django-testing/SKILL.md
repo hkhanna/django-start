@@ -13,7 +13,7 @@ Work test-first. Write a failing test that describes the behavior you want (red)
 
 ## Configuration
 
-- Run tests against the dedicated test settings module (`config.settings.test`, selected in the pytest configuration), which swaps file storage to in-memory. Put any other test-only override there rather than in a fixture.
+- Put a test-only settings override in `config.settings.test` (already selected by the pytest configuration; it swaps file storage to in-memory) rather than in a fixture.
 
 ## Database access
 

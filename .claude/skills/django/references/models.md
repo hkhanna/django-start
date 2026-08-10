@@ -22,16 +22,16 @@ updated_at = models.DateTimeField(auto_now=True)
 
 ## The user model
 
-- A new project defines its own user model before the first migration — `class User(AbstractUser)` in its own app, `AUTH_USER_MODEL` pointing at it — even with no extra fields yet. Swapping user models after tables exist is schema surgery.
+- A new project defines its own user model before the first migration — `class User(AbstractUser)`, `AUTH_USER_MODEL` pointing at it — even with no extra fields yet.
 - Reference it as `settings.AUTH_USER_MODEL` in model field definitions and `get_user_model()` everywhere else.
 
 ## Model hygiene
 
 - Set `related_name` explicitly on every `ForeignKey` and `ManyToManyField`.
-- Set `null` and `blank` deliberately: `blank` controls form validation, `null` controls the database column. Django stores an empty value as `''` in text-backed fields (`CharField`, `TextField`, `SlugField`, `EmailField` — and `FileField`, which stores a path) and as `NULL` in every other column type. So an optional text field takes `blank=True` alone, and an optional field of any other type — numeric, date, boolean, `ForeignKey` — takes `blank=True, null=True`. The exception is a unique, optional text field, which needs `null=True` so multiple blank rows don't collide on the unique constraint. (`null` has no effect on `ManyToManyField`.)
+- An optional text-backed field takes `blank=True` alone (Django stores the blank as `''`); an optional field of any other type — numeric, date, boolean, `ForeignKey` — takes `blank=True, null=True`. The exception is a unique, optional text field, which needs `null=True,  # noqa: DJ001` so multiple blank rows don't collide on the unique constraint. (`null` has no effect on `ManyToManyField`.)
 - Define a choice field's options as an inner `TextChoices` or `IntegerChoices` class and reference them as `Model.Kind.VALUE`. Move the class out of the model only when several models share it.
 - Store money and other exact quantities in a `DecimalField`. Store points in time as timezone-aware `DateTimeField`.
-- Give each model a `__str__` built from its own fields — one that reads a related object runs a query per row in the admin and shell — and a `Meta.ordering` when the rows have a natural order.
+- Build `__str__` from the model's own fields — one that reads a related object runs a query per row in the admin and shell. Add `Meta.ordering` when the rows have a natural order.
 
 ## Inheritance
 
