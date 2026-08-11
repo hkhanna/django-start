@@ -1,4 +1,4 @@
-.PHONY: app check all clean build mypy ruff djlint format db clear-db migrate seed
+.PHONY: app css watch check all clean build mypy ruff djlint format db clear-db migrate seed
 
 include .env
 SHELL := /bin/bash
@@ -6,7 +6,13 @@ DB_NAME = $(shell basename $(CURDIR))-db
 
 # RUNNING AND TESTING #
 app:
-	uv run python manage.py runserver 
+	uv run python manage.py tailwind runserver
+
+css:
+	uv run python manage.py tailwind build
+
+watch:
+	uv run python manage.py tailwind watch
 
 check: mypy ruff djlint
 	uv run py.test

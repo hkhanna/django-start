@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_tailwind_cli",
     "core",
 ]
 
@@ -82,6 +83,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # STATIC
 # ------------------------------------------------------------------------------
 STATIC_URL = "static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]  # Required by django-tailwind-cli
+TAILWIND_CLI_VERSION = "4.3.3"
 
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -104,7 +107,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 # LOGGING
 # ------------------------------------------------------------------------------
