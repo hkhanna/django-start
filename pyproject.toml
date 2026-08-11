@@ -38,6 +38,7 @@ warn_unused_configs = true
 
 [tool.djlint]
 profile = "django"
+ignore = "H030"  # meta description is page content, not base-template infrastructure
 
 [tool.django-stubs]
 django_settings_module = "config.settings.test"

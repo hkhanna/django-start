@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>
+            {% block title %}{% endblock %}
+        </title>
+        <meta name="htmx-config"
+              content='{"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"422","swap":true},{"code":"[45]..","swap":false,"error":true}]}'>
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+        {% include "core/_messages.html" with messages=messages only %}
+        {% block content %}{% endblock %}
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>
