@@ -5,15 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "django>=6.0.7",
-    "django-environ>=0.14.0",
-    "gunicorn>=26.0.0",
-    "whitenoise>=6.12.0",
+  "django>=6.0.7",
+  "django-environ>=0.14.0",
+  "gunicorn>=26.0.0",
+  "whitenoise>=6.12.0",
 ]
 
 [dependency-groups]
 dev = [
   "django-stubs>=6.0.7",
+  "djlint>=1.44.2",
   "mypy>=2.3.0",
   "pytest>=9.1.1",
   "pytest-django>=4.12.0",
@@ -34,6 +35,9 @@ warn_unused_ignores = true
 warn_redundant_casts = true
 # Flag [[tool.mypy.overrides]] sections that don't match any module
 warn_unused_configs = true
+
+[tool.djlint]
+profile = "django"
 
 [tool.django-stubs]
 django_settings_module = "config.settings.test"

@@ -1,4 +1,4 @@
-.PHONY: app check all clean build mypy ruff db clear-db migrate seed 
+.PHONY: app check all clean build mypy ruff djlint format db clear-db migrate seed
 
 include .env
 SHELL := /bin/bash
@@ -8,8 +8,8 @@ DB_NAME = $(shell basename $(CURDIR))-db
 app:
 	uv run python manage.py runserver 
 
-check: mypy ruff
-	uv run py.test 
+check: mypy ruff djlint
+	uv run py.test
 
 mypy:
 	uv run mypy .
@@ -18,8 +18,12 @@ ruff:
 	uv run ruff check
 	uv run ruff format --check
 
+djlint:
+	uv run djlint . --lint --check
+
 format:
 	uv run ruff format
+	uv run djlint . --reformat
 
 # BUILD STEPS #
 all: clean build db
