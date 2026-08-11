@@ -6,7 +6,6 @@ import environ
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 env = environ.Env()
 
-# Must be set directly in common.py because of how django-harry does logging
 DJANGO_ENV = env.str("DJANGO_SETTINGS_MODULE").split(".")[-1]
 
 if DJANGO_ENV != "production" and os.path.exists(BASE_DIR / ".env"):
@@ -109,4 +108,29 @@ TEMPLATES = [
 
 # LOGGING
 # ------------------------------------------------------------------------------
-# TBD
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "{asctime} {levelname} [{name}] {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%dT%H:%M:%S%z",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+            "formatter": "default",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": env.str("DJANGO_LOG_LEVEL", "INFO"),
+    },
+    "loggers": {
+        "django": {"level": "INFO"},
+        "django.request": {"level": "ERROR"},
+    },
+}

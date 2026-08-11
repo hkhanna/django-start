@@ -14,7 +14,12 @@
 ## State lives on the persistent disk
 
 - Production is a single node with a Render persistent disk mounted at `/var/data` (`DISK_DIR`). The SQLite database and uploaded media live on that disk and survive deploys; sessions are database-backed. There is no separate database service or object storage — do not introduce `DATABASE_URL` or an S3 storage backend.
-- Send logs to stdout and stderr as a stream and let the platform collect them, rather than opening and rotating log files inside the app.
+
+## Logging
+
+- Get a logger at module level with `logger = logging.getLogger(__name__)`; never `print()` in app code.
+- Pass data as `extra={"key": value}` rather than interpolating it into the message — the message stays greppable, and the values become searchable attributes if logs are later forwarded to Sentry.
+- Levels: INFO is the normal narrative of the app, WARNING is something wrong but handled, ERROR is something that needs attention.
 
 ## Dependencies and release
 
