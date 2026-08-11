@@ -24,58 +24,7 @@ def item_list(request: HttpRequest) -> HttpResponse:
     return TemplateResponse(request, "app/list.html", {"items": ...})
 ```
 
-`inline` renders the partial in place on the full page; for an htmx request naming it, the decorator narrows the response to `"app/list.html#item-list"`. The decorator and its helpers are house utilities in a `core/htmx.py` — reuse the project's copy if one exists, otherwise add:
-
-```python
-import copy
-from functools import wraps
-
-from django.http import HttpRequest, HttpResponse, QueryDict
-from django.template.loader import render_to_string
-from django.utils.cache import patch_vary_headers
-
-
-def is_htmx(request: HttpRequest) -> bool:
-    return request.headers.get("HX-Request") == "true"
-
-
-def for_htmx(view):
-    """For an htmx request naming use_partial, render only those partials."""
-
-    @wraps(view)
-    def _view(request, *args, **kwargs):
-        resp = view(request, *args, **kwargs)
-        if not is_htmx(request) or not hasattr(resp, "render"):
-            return resp
-        partials = request.GET.getlist("use_partial") or request.POST.getlist("use_partial")
-        if not partials:
-            return resp
-        if len(partials) == 1:
-            resp.template_name = f"{resp.template_name}#{partials[0]}"
-        else:
-            # Several partials at once (out-of-band swaps): render each and concatenate.
-            resp = HttpResponse(
-                "".join(
-                    render_to_string(f"{resp.template_name}#{name}", resp.context_data, request)
-                    for name in partials
-                ),
-                status=resp.status_code,
-                headers=resp.headers,
-            )
-        # Fragment and full page share a URL, so HTTP caches must key on the header.
-        patch_vary_headers(resp, ("HX-Request",))
-        return resp
-
-    return _view
-
-
-def make_get_request(request: HttpRequest) -> HttpRequest:
-    """Internal-redirect helper: the same request, re-shaped as a GET."""
-    new_request = copy.copy(request)
-    new_request.POST = QueryDict()
-    new_request.method = "GET"
-    return new_request
-```
+`inline` renders the partial in place on the full page; for an htmx request naming it, the decorator narrows the response to `"app/list.html#item-list"`. The decorator and its helpers (`is_htmx`, `make_get_request`) are house utilities shipped in `core/htmx.py`.
 
 - The client names the partial, so treat `use_partial` as user input: permission checks live in the view, or inside the partial itself. An `{% if perm %}` wrapped *around* a partialdef is bypassed by requesting the partial directly.
 - Keep the non-JS path working where it costs one attribute: a form carries `method="POST" action=""` alongside `hx-post`, a pager link a real `href` alongside `hx-get`. Non-htmx requests already get the full page, and tests can exercise the view without a browser.

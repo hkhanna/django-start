@@ -5,7 +5,7 @@ description: Testing standard for this Django codebase, using pytest and pytest-
 
 # Testing standard
 
-Tests run under **pytest** with **pytest-django**. Name test files to match `test*.py` (pytest's `python_files` setting) — an app's `tests.py`, or `test_models.py` when tests split by module — and test functions `test_*`. Follow arrange, act, assert: set up the data, take the action, assert on the outcome.
+Tests run under **pytest** with **pytest-django**. Each app keeps its tests in a `tests/` directory (no `__init__.py` — the pytest config's importlib mode handles imports), one `test_<module>.py` per module under test — `tests/test_views.py`, `tests/test_htmx.py` — and test functions named `test_*`. Follow arrange, act, assert: set up the data, take the action, assert on the outcome. Every test carries a one-line docstring (two max) stating the behavior it pins.
 
 ## Red, green, refactor
 
