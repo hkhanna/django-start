@@ -18,7 +18,7 @@ This repository is a template for my Django projects.
 
 1. Create the application in the Render web interface.
 1. [TBD - This needs to be filled out.]
-1. Create a [Sentry Uptime Monitor](https://docs.sentry.io/product/uptime-monitoring/)pointed at `https://<host>/healthz`. No Sentry SDK is required for uptime monitoring.
+1. Create a [Sentry Uptime Monitor](https://docs.sentry.io/product/uptime-monitoring/) pointed at `https://<host>/healthz`. No Sentry SDK is required for uptime monitoring.
 
 ## Updating a project from this template
 TBD

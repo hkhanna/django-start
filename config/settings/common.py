@@ -85,6 +85,7 @@ AUTH_PASSWORD_VALIDATORS = [
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Required by django-tailwind-cli
 TAILWIND_CLI_VERSION = "4.3.3"
+TAILWIND_CLI_SRC_CSS = BASE_DIR / "assets/source.css"
 
 # MEDIA
 # ------------------------------------------------------------------------------
