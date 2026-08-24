@@ -16,8 +16,9 @@ This repository is a template for my Django projects.
 
 ## First Deploy to Production - Render.com
 
-1. Create the application in the Render web interface.
-1. [TBD - This needs to be filled out.]
+1. Create a "New Blueprint Instance" in the Render web interface and connect it to the Git repo.
+1. Deploy the Blueprint.
+1. Add a custom domain, if appropriate.
 1. Create a [Sentry Uptime Monitor](https://docs.sentry.io/product/uptime-monitoring/) pointed at `https://<host>/healthz`. No Sentry SDK is required for uptime monitoring.
 
 ## Updating a project from this template
