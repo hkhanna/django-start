@@ -1,6 +1,10 @@
+import logging
+
 from django.db import connection
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.http import require_safe
+
+logger = logging.getLogger(__name__)
 
 
 @require_safe
@@ -15,3 +19,11 @@ def healthz(request: HttpRequest) -> HttpResponse:
         cursor.execute("SELECT 1")
         cursor.fetchone()
     return HttpResponse("ok", content_type="text/plain")
+
+
+@require_safe
+def sentry_debugz(request: HttpRequest) -> HttpResponse:
+    logger.info("Info log")
+    logger.warning("Warning log")
+    division_by_zero = 1 / 0
+    return HttpResponse(division_by_zero, content_type="text/plain")

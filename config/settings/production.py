@@ -1,7 +1,11 @@
+import logging
 from pathlib import Path
 
+import sentry_sdk
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 from .common import *  # noqa: F403
-from .common import BASE_DIR, MIDDLEWARE, env
+from .common import BASE_DIR, LOG_LEVEL, MIDDLEWARE, env
 
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS: list = [env("RENDER_EXTERNAL_HOSTNAME")]
@@ -50,3 +54,20 @@ X_FRAME_OPTIONS = "DENY"
 # Without this exemption, a 301 from SecurityMiddleware might
 # pass the check without everrunning the view's database query.
 SECURE_REDIRECT_EXEMPT = [r"^healthz$"]
+
+SENTRY_DSN = env.str("DJANGO_SENTRY_DSN", "")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment="production",
+        release=env.str("RENDER_GIT_COMMIT"),
+        send_default_pii=True,
+        enable_logs=True,
+        integrations=[
+            LoggingIntegration(
+                level=getattr(logging, LOG_LEVEL),  # Breadcrumb level for errors
+                event_level=logging.ERROR,  # Error level
+                sentry_logs_level=getattr(logging, LOG_LEVEL),  # General logging
+            ),
+        ],
+    )

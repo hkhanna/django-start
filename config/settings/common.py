@@ -111,6 +111,7 @@ TEMPLATES = [
 
 # LOGGING
 # ------------------------------------------------------------------------------
+LOG_LEVEL = env.str("DJANGO_LOG_LEVEL", "INFO")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -130,7 +131,7 @@ LOGGING = {
     },
     "root": {
         "handlers": ["console"],
-        "level": env.str("DJANGO_LOG_LEVEL", "INFO"),
+        "level": LOG_LEVEL,
     },
     "loggers": {
         "django": {"level": "INFO"},

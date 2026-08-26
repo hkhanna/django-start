@@ -20,3 +20,5 @@ services:
         generateValue: true
       - key: DJANGO_LOG_LEVEL
         value: INFO
+      - key: DJANGO_SENTRY_DSN
+        value: ""  # Set this to enable Sentry in production
