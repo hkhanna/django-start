@@ -5,9 +5,11 @@ description: Frontend standard for this Django stack — server-rendered templat
 
 # Django frontend standard
 
-The stack is Django templates + Tailwind + HTMX + Alpine, on Django ≥ 6.0 (the partial pattern depends on built-in template partials). Three leading ideas carry the standard; think with them by name.
+The stack is Django templates + Tailwind + HTMX + Alpine, on Django ≥ 6.0 (the partial pattern depends on built-in template partials). Four leading ideas carry the standard; think with them by name.
 
 **The server owns the HTML.** Every interaction that reads or writes data is a request that returns server-rendered hypermedia — a full page, or a fragment htmx swaps in — carrying both the new state and the actions now available from it. State lives in the database; pages get no JSON endpoints, no client-side rendering, no client-side model.
+
+**htmx is earned.** The default interaction is a plain request: a form posts and redirects, a link navigates, a validation failure re-renders the full page. An interaction earns `hx-` attributes through one of three payoffs — **latency** (a slow request needs an in-flight indicator), **place** (an in-place swap keeps context a reload would lose: scroll position in a long list, state elsewhere on a busy page), or **liveness** (the interaction reacts as the user acts: debounced search, a deferred expensive region). A form whose success navigates elsewhere, on a page that is only the form, is a plain form.
 
 **Alpine owns the client.** Behavior that never touches the server — open/closed state, an active tab, showing a dialog, reacting to an event — is Alpine's, written as `x-` attributes in the markup. Alpine never fetches; the moment data is involved, it's an htmx request.
 
@@ -18,7 +20,7 @@ Validation logic, view structure, and model rules live in the django skill; this
 ## Reach for the reference that covers what you are touching
 
 - Templates or partials → `references/templates.md`
-- Any `hx-` attribute, fragment swap, or HTMX-aware view → `references/htmx.md`
+- Whether an interaction earns htmx, any `hx-` attribute, fragment swap, or HTMX-aware view → `references/htmx.md`
 - Client-side behavior → `references/alpine.md`
 - Tailwind styling → `references/tailwind.md`
 - Rendering a form → `references/forms.md`

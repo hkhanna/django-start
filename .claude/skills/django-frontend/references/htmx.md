@@ -2,9 +2,16 @@
 
 The server renders HTML: an htmx request gets back a fragment ready to swap in, and the server owns the state. HTMX is glue, not a client-side framework.
 
+## Earned, or plain
+
+The default is a plain request — POST/redirect/GET, full-page re-render on validation errors. The test for an earned interaction is mechanical: follow the success response. If it navigates (`HX-Redirect`, or a redirect to another page) and the only fragment that ever swaps is the form's own validation re-render, nothing was earned — write a plain form.
+
+- A payoff earns only itself. A slow action (**latency**) earns `hx-indicator` and `hx-disabled-elt` while still redirecting on success; it does not earn the partial pattern.
+- `hx-confirm` and `hx-disabled-elt` are riders, not earners: they ride along on an earned interaction, and alone justify nothing a plain form lacks.
+
 ## The partial pattern
 
-One pattern covers fragment rendering: the template wraps each swappable region in a `{% partialdef %}`, names that partial in the request with `hx-vals`, and the view opts in with `@for_htmx`. The complete routing — what swaps, into what, rendered from which partial — is readable in the template; the view never learns which fragments exist.
+For an interaction that earned an in-place swap, one pattern covers fragment rendering: the template wraps each swappable region in a `{% partialdef %}`, names that partial in the request with `hx-vals`, and the view opts in with `@for_htmx`. The complete routing — what swaps, into what, rendered from which partial — is readable in the template; the view never learns which fragments exist.
 
 ```html+django
 {% partialdef item-list inline %}
@@ -67,6 +74,7 @@ def item_detail(request: HttpRequest, item_id: int) -> HttpResponse:
     content='{"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"422","swap":true},{"code":"[45]..","swap":false,"error":true}]}'>
   ```
 - Return `204` when the action succeeded and nothing on the page needs to change; htmx swaps nothing on an empty success.
+- The `core.htmx` messages middleware appends queued messages to a fragment response as an out-of-band swap of the `#messages` region, so `messages.success()` reads identically on plain and htmx paths. The swapped-in state is still the primary feedback: queue a message for what the fragment can't show — a side effect elsewhere, a warning riding a success — not to restate the swap.
 - Removing an element (an inline row delete) is an empty `200` — the empty body swaps the target away — or `hx-swap="delete"`. A `204` suppresses the swap, so the element would stay.
 - Reach for response headers when the answer is more than a fragment: `HX-Trigger` fires a client-side event other elements listen for, `HX-Redirect` navigates after success, `HX-Retarget` and `HX-Reswap` override the requesting element's target and swap style, and `HX-Refresh` forces a full reload when a selective swap isn't worth it. A bare `HttpResponse` carrying only such headers passes through `@for_htmx` untouched.
 - Name `HX-Trigger` events kebab-case (`{"item-created": item.id}`): HTML attributes are case-insensitive, so a camelCase event can never be heard by an Alpine `@item-created.window` listener. An htmx element listens with `hx-trigger="item-created from:body"`.

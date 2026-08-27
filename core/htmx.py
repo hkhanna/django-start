@@ -3,6 +3,7 @@ from collections.abc import Callable
 from functools import wraps
 from typing import Concatenate
 
+from django.contrib.messages import get_messages
 from django.http import HttpRequest, HttpResponse, QueryDict
 from django.template.loader import render_to_string
 from django.template.response import SimpleTemplateResponse
@@ -57,3 +58,47 @@ def make_get_request(request: HttpRequest) -> HttpRequest:
     new_request.POST = QueryDict()
     new_request.method = "GET"
     return new_request
+
+
+class HtmxMessagesMiddleware:
+    """Carry queued messages into htmx fragment responses.
+
+    A fragment swap bypasses base.html, so the messages banner never
+    re-renders. This appends the pending messages to the fragment as an
+    out-of-band swap of the #messages region, making the messages
+    framework read identically on plain and htmx paths.
+
+    Must sit below MessageMiddleware in MIDDLEWARE: the messages have to
+    be consumed here before MessageMiddleware saves the storage.
+    """
+
+    def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
+        self.get_response = get_response
+
+    def __call__(self, request: HttpRequest) -> HttpResponse:
+        response = self.get_response(request)
+        if not (
+            is_htmx(request)
+            and ("use_partial" in request.GET or "use_partial" in request.POST)
+        ):
+            # A full page renders the banner itself.
+            return response
+        if (
+            "HX-Redirect" in response.headers
+            or response.status_code == 204
+            or 300 <= response.status_code < 400
+            or response.streaming
+        ):
+            # A full page is coming (or the response can't carry a body):
+            # the messages stay queued for that page's banner.
+            return response
+        pending = list(get_messages(request))
+        if not pending:
+            return response
+        if isinstance(response, SimpleTemplateResponse) and not response.is_rendered:
+            response.render()
+        oob = render_to_string(
+            "core/_messages.html", {"messages": pending, "hx_oob": True}
+        )
+        response.content += oob.encode()
+        return response
