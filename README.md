@@ -8,7 +8,7 @@ This repository is a template for my Django projects.
 1. Run `copier copy git@github.com:hkhanna/django-start.git path/to/destination`
 1. Grep for the string `django-start` and either replace that string with the project name or take the other described action.
  - Don't worry about uv.lock. It will get overwritten during `make all`.
-1. Update `env.example` to the desired defaults for the new project.
+1. Update `env.op` to the desired defaults for the new project.
 1. Remove or replace the LICENSE file.
 1. Do the "Local Installation" in the README.
 1. Create git repo and initial commit
