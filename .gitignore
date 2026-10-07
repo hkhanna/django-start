@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # django
-db.sqlite3
+db.sqlite3*
 *.log
 .env
 .media/

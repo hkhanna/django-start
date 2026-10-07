@@ -85,6 +85,7 @@ class HtmxMessagesMiddleware:
             return response
         if (
             "HX-Redirect" in response.headers
+            or "HX-Refresh" in response.headers
             or response.status_code == 204
             or 300 <= response.status_code < 400
             or response.streaming

@@ -150,6 +150,16 @@ def test_messages_middleware_leaves_hx_redirect_queued(rf):
     assert [m.message for m in get_messages(request)] == ["Saved."]
 
 
+def test_messages_middleware_leaves_hx_refresh_queued(rf):
+    """An HX-Refresh means a full reload is coming: the message stays queued for its banner."""
+    request = _messages_request(rf, htmx=True, partial="a", text="Saved.")
+    response = HtmxMessagesMiddleware(
+        lambda r: HttpResponse(headers={"HX-Refresh": "true"})
+    )(request)
+    assert response.content == b""
+    assert [m.message for m in get_messages(request)] == ["Saved."]
+
+
 def test_messages_middleware_leaves_bodyless_responses_queued(rf):
     """A 204 carries no body; the message stays queued rather than being lost."""
     request = _messages_request(rf, htmx=True, partial="a", text="Saved.")

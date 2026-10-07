@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.auth.decorators import login_not_required
 from django.db import connection
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.http import require_safe
@@ -8,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 @require_safe
+@login_not_required
 def healthz(request: HttpRequest) -> HttpResponse:
     """Smoke test endpoint for health checks or uptime monitoring.
 
@@ -22,6 +24,7 @@ def healthz(request: HttpRequest) -> HttpResponse:
 
 
 @require_safe
+@login_not_required
 def sentry_debugz(request: HttpRequest) -> HttpResponse:
     logger.info("Info log")
     logger.warning("Warning log")
