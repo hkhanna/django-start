@@ -72,6 +72,12 @@ class HtmxMessagesMiddleware:
     be consumed here before MessageMiddleware saves the storage.
     """
 
+    # The partial rendered as the out-of-band swap. To restyle the banner in a
+    # project, don't edit this string or core/_messages.html: subclass this
+    # middleware in the project's app, override `template_name` there, and
+    # point MIDDLEWARE at the subclass. core/ stays identical to the template.
+    template_name = "core/_messages.html"
+
     def __init__(self, get_response: Callable[[HttpRequest], HttpResponse]) -> None:
         self.get_response = get_response
 
@@ -99,7 +105,7 @@ class HtmxMessagesMiddleware:
         if isinstance(response, SimpleTemplateResponse) and not response.is_rendered:
             response.render()
         oob = render_to_string(
-            "core/_messages.html", {"messages": pending, "hx_oob": True}
+            self.template_name, {"messages": pending, "hx_oob": True}
         )
         response.content += oob.encode()
         return response

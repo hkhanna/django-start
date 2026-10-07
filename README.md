@@ -5,7 +5,7 @@ This repository is a template for my Django projects.
 ## Generating a new Django project from this template
 
 1. Pick a suitable project name.
-1. Run `copier copy git@github.com:hkhanna/django-start.git path/to/destination`
+1. Run `uvx copier copy https://github.com/hkhanna/django-start path/to/destination`
 1. Grep for the string `django-start` and either replace that string with the project name or take the other described action.
  - Don't worry about uv.lock. It will get overwritten during `make all`.
 1. Update `env.op` to the desired defaults for the new project.
@@ -24,4 +24,5 @@ This repository is a template for my Django projects.
 1. Create a [Sentry Uptime Monitor](https://docs.sentry.io/product/uptime-monitoring/) pointed at `https://<host>/healthz`. No Sentry SDK is required for uptime monitoring.
 
 ## Updating a project from this template
-TBD
+1. From the downstream project, run `uvx copier update`
+2. Resolve any conflicts by hand, then commit the changes.

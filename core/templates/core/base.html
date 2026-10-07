@@ -11,7 +11,7 @@
         <meta name="htmx-config"
               content='{"responseHandling":[{"code":"204","swap":false},{"code":"[23]..","swap":true},{"code":"422","swap":true},{"code":"[45]..","swap":false,"error":true}]}'>
         <script defer src="{% static 'core/vendor/htmx-2.0.10.min.js' %}"></script>
-        <script defer src="{% static 'core/vendor/alpine-3.16.1.min.js' %}"></script>
+        <script defer src="{% static 'core/vendor/alpine-3.17.0.min.js' %}"></script>
         {% block extra_head %}{% endblock %}
     </head>
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
